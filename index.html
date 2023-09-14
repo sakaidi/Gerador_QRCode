@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Code Generator</title>
+</head>
+
+<body>
+    <h1>QR Code Generator</h1>
+    <label for="urlInput">Enter URL:</label>
+    <input type="text" id="urlInput">
+    <button onclick="generateQRCode()">Generate QR Code</button>
+
+
+    <!-- Element to display the QR Code -->
+    <img id="qrcode" style="display: none;">
+
+    <!-- Link to download the QR Code -->
+    <a id="downloadLink" style="display: none;" download="qrcode.png">Download QR Code</a>
+
+    <script>
+        function generateQRCode() {
+            const inputUrl = document.getElementById("urlInput").value;
+            fetch(`/generate?inputUrl=${inputUrl}`)
+                .then(response => response.blob())
+                .then(data => {
+                    const qrCodeImg = document.getElementById("qrcode");
+                    qrCodeImg.style.display = "block";
+                    qrCodeImg.src = URL.createObjectURL(data);
+
+                    // Show the download link
+                    const downloadLink = document.getElementById("downloadLink");
+                    downloadLink.style.display = "block";
+                    downloadLink.href = qrCodeImg.src;
+                })
+                .catch(error => console.error(error));
+        }
+    </script>
+</body>
+
+</html>
